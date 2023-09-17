@@ -1,0 +1,29 @@
+{
+  "name": "fragments-ui",
+  "private": true,
+  "source": "src/index.html",
+  "version": "0.0.1",
+  "description": "Fragments UI testing web app",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aali309/fragments-ui.git"
+  },
+  "author": "Atif Ali <aali309@myseneca.ca>",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "parcel": "^2.7.0",
+    "process": "^0.11.10",
+    "punycode": "^1.4.1",
+    "querystring-es3": "^0.2.1"
+  },
+  "dependencies": {
+    "aws-amplify": "^5.3.11"
+  },
+  "keywords": []
+}
