@@ -43,7 +43,16 @@ async function init() {
 
   // Do an authenticated request to the fragments API server and log the result
   getUserFragments(user);
+  getInputValue();
 }
 
+async function getInputValue() {
+  // Selecting the input element and get its value
+  const submitbtn = document.querySelector("#sbbtn");
+
+  submitbtn.onclick = () => {
+    postUserText(document.getElementById("myInput").value);
+  };
+}
 // Wait for the DOM to be ready, then start the app
 addEventListener("DOMContentLoaded", init);
