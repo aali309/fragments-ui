@@ -12,39 +12,55 @@ export async function getUserFragments(user, expand = 0) {
   console.log("Requesting user fragments data...");
 
   try {
-    const res = await fetch(`${apiUrl}/v1/fragments?expand=${expand}`, {
-      headers: {
-        Authorization: `Bearer ${user.idToken}`,
-      },
+    const res = await fetch(`${apiUrl}/v1/fragments`, {
+      // Generate headers with the proper Authorization bearer token to pass
+      headers: user.authorizationHeaders(),
     });
 
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
-
     const data = await res.json();
     console.log("Got user fragments data", { data });
-    return data["fragments"];
+
+    if (data["fragments"].length != 0)
+      getFragmentData(user, data["fragments"].at(-1));
   } catch (err) {
     console.error("Unable to call GET /v1/fragment", { err });
   }
 }
 
-export async function postUserFragment(user, contentType, fragmentData) {
+export async function postUserFragment(user) {
   try {
-    const res = await fetch(`${apiUrl}/v1/fragments`, {
+    let response = await fetch(`${apiUrl}/v1/fragments`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${user.idToken}`,
-        "Content-Type": contentType,
+        "Content-Type": "text/plain",
       },
-      body: fragmentData,
+      body: "This is a fragment",
     });
+  } catch (err) {
+    console.error("Unable to call POST /v1/fragment");
+  }
+}
 
+export async function getFragmentData(user, id) {
+  console.log(`Requesting fragment data by id: ${id}`);
+
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      headers: {
+        Authorization: `Bearer ${user.idToken}`,
+      },
+    });
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
+
+    const data = await res.text();
+    console.log(data);
   } catch (err) {
-    console.error("Unable to call POST /v1/fragment");
+    console.error("Unable to call GET /v1/fragments/:id", { err });
   }
 }
