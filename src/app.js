@@ -1,15 +1,22 @@
 // src/app.js
 
 import { Auth, getUser } from "./auth";
-import { getUserFragments, postUserText } from "./api";
+import { getUserFragments, postUserFragment } from "./api";
 
 async function init() {
   // Get our UI elements
-  const userSection = document.querySelector("#user");
   const loginBtn = document.querySelector("#login");
   const logoutBtn = document.querySelector("#logout");
-  const addFragmentBtn = document.getElementById("add-fragment");
+
+  const userSection = document.querySelector("#user");
+
   const fragmentSection = document.getElementById("fragment-section");
+  const fragmentViewSection = document.getElementById("fragment-view-section");
+  const fragmentsTypes = document.getElementById("fragments-types");
+  const fragmentData = document.getElementById("fragment-data");
+  const addFragmentBtn = document.getElementById("add-fragment");
+  const tableBody = document.getElementById("tableBody");
+  //const text = document.createTextNode(fragment[element] || "");
 
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
@@ -22,7 +29,6 @@ async function init() {
     // https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js/#sign-out
     Auth.signOut();
   };
-
   // See if we're signed in (i.e., we'll have a `user` object)
   const user = await getUser();
   if (!user) {
@@ -32,9 +38,12 @@ async function init() {
     fragmentViewSection.hidden = true;
     return;
   }
-
   // Log the user info for debugging purposes
   console.log({ user });
+
+  addFragmentBtn.onclick = () => {
+    postUserFragment(user, fragmentsTypes.value, fragmentData.value);
+  };
 
   // Update the UI to welcome the user
   userSection.hidden = false;
@@ -46,21 +55,33 @@ async function init() {
   loginBtn.disabled = true;
 
   // Do an authenticated request to the fragments API server and log the result
-  getUserFragments(user);
-  getInputValue();
-}
+  const fragments = await getUserFragments(user, 1);
+  let rows = [];
+  if (fragments.length > 0) {
+    fragmentViewSection.hidden = false;
+    fragments.forEach((fragment) => {
+      console.log("++Fragment:", fragment); // Log the fragment object for debugging
+      const tr = document.createElement("tr");
+      ["ownerId", "id", "type", "created", "updated", "size"].forEach(
+        (element) => {
+          const text = document.createTextNode(fragment[element]);
+          const td = document.createElement("td");
 
-async function getInputValue() {
-  // Selecting the input element and get its value
-  const submitbtn = document.querySelector("#sbbtn");
-  var contentType = document.getElementById("formats");
-  submitbtn.onclick = () => {
-    //console.log(contentType.options[contentType.selectedIndex].text)
-    postUserText(
-      document.getElementById("myInput").value,
-      contentType.options[contentType.selectedIndex].text
-    );
-  };
+          td.classList.add(element);
+
+          td.appendChild(text);
+          tr.appendChild(td);
+        }
+      );
+      rows.push(tr);
+      //tableBody.appendChild(tr);
+    });
+  } else {
+    fragmentViewSection.hidden = true;
+  }
+  console.log("Before appending rows");
+  tableBody.append(...rows);
+  console.log("After appending rows");
 }
 
 // Wait for the DOM to be ready, then start the app

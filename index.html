@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Fragments UI</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script type="module" src="src/app.js"></script>
+</head>
+
+<body>
+    <h1>Fragments UI</h1>
+    <section hidden id="user">
+        <h2>Hello <span class="username"></span>!</h2>
+    </section>
+
+    <section>
+        <nav><button id="login">Login</button> <button id="logout">Logout</button></nav>
+    </section>
+
+    <form id="fragment-section">
+        <section>
+            <label for="fragments-types">Select a fragment type:</label>
+            <select id="fragments-types" name="fragments-types">
+                <option value="text/plain">text/plain</option>
+                <option value="text/markdown">text/markdown</option>
+                <option value="text/html">text/html</option>
+                <option value="application/json">application/json</option>
+            </select>
+        </section>
+        <br>
+        <section>
+            <label for="fragment-data">Enter the fragment data:</label>
+            <textarea name="fragment-data" id="fragment-data" cols="30" rows="10" required></textarea>
+        </section>
+
+        <br><br>
+        <button type="submit" id="add-fragment">Add Fragment</button>
+    </form>
+
+    <section id="fragment-view-section">
+        <h4>Fragments Table</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>OWNER ID</th>
+                    <th>ID</th>
+                    <th>TYPE</th>
+                    <th>CREATED</th>
+                    <th>UPDATED</th>
+                    <th>SIZE</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </section>
+</body>
+
+</html>
