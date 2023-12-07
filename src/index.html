@@ -5,6 +5,31 @@
     <meta charset="utf-8" />
     <title>Fragments UI</title>
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: rgb(153, 102, 153);
+            color: rgb(255, 255, 204);
+            margin: 20px;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #010c1a;
+        }
+
+        h2 {
+            color: #e3ef5f;
+        }
+
+        h3 {
+            color: #010c1a;
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -19,7 +44,62 @@
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #777799;
+            color: #ffffff;
+        }
+
+        button {
+            background-color: #0a182e;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #3367d6;
+        }
+
+        form {
+            background-color: #777799;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #010c1a;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #010c1a;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #010c1a;
+            border-radius: 5px;
+        }
+
+        #fragment-view-section {
+            background-color: #777799;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #010c1a;
+        }
+
+        #fragment-view-section th:nth-child(2),
+        #fragment-view-section th:nth-child(3),
+        #fragment-view-section th:nth-child(4),
+        #fragment-view-section th:nth-child(5),
+        #fragment-view-section th:nth-child(6),
+        #fragment-view-section th:nth-child(7) {
+            color: #010c1a;
         }
     </style>
     <script type="module" src="./app.js"></script>
@@ -27,15 +107,22 @@
 
 <body>
     <h1>Fragments UI</h1>
+
     <section hidden id="user">
         <h2>Hello <span class="username"></span>!</h2>
     </section>
 
     <section>
-        <nav><button id="login">Login</button> <button id="logout">Logout</button></nav>
+        <nav><button id="login">Login</button>
+            <button id="logout">Logout</button>
+        </nav>
     </section>
 
-    <form id="fragment-section">
+    <hr>
+
+    <form id="fragment-section" onsubmit="return false">
+        <h3>Create Fragment</h3>
+
         <section>
             <label for="fragments-types">Select a fragment type:</label>
             <select id="fragments-types" name="fragments-types">
@@ -43,29 +130,76 @@
                 <option value="text/markdown">text/markdown</option>
                 <option value="text/html">text/html</option>
                 <option value="application/json">application/json</option>
+                <option value="image/png">image/png</option>
+                <option value="image/jpeg">image/jpeg</option>
+                <option value="image/webp">image/webp</option>
+                <option value="image/gif">image/gif</option>
             </select>
         </section>
-        <br>
-        <section>
-            <label for="fragment-data">Enter the fragment data:</label>
-            <textarea name="fragment-data" id="fragment-data" cols="30" rows="10" required></textarea>
+
+        <section hidden id="img-section-uploader">
+            <label for="fragment-img-data">Import your images:</label>
+            <input id="fragment-img-data" name="fragment-img-data" type="file" multiple />
         </section>
 
-        <br><br>
+        <section id="txt-section-uploader">
+            <label for="fragment-txt-data">Enter the fragment data:</label>
+            <textarea id="fragment-txt-data" name="fragment-txt-data" cols="30" rows="10"></textarea>
+        </section>
+
         <button type="submit" id="add-fragment">Add Fragment</button>
     </form>
 
+    <hr>
+
+    <section id="data-request-section">
+        <h3>Find Fragment</h3>
+
+        <label for="find-data-id">Fragment Id:</label>
+        <input type="text" name="find-data-id" id="find-data-id">
+
+        <label for="find-data-ext">Fragment Id Extension (Optional): </label>
+        <input type="text" name="find-data-ext" id="find-data-ext">
+        <br /> <br />
+        <button type="submit" id="find-fragment-data">Find Data</button>
+    </section>
+
+    <section id="fragment-data-display">
+        <img hidden id="image-display" alt="fragment data" />
+        <p id="noImage-display"></p>
+    </section>
+
+    <section hidden id="fragment-edit-section">
+        <hr>
+        <h3>Update fragment data</h3>
+
+        <section hidden id="img-section-edit-uploader">
+            <label for="fragment-img-edit-data">Import your new images: <span class="editId"></span></label>
+            <input id="fragment-img-edit-data" name="fragment-img-edit-data" type="file" multiple />
+        </section>
+
+        <section id="txt-section-edit-uploader">
+            <label for="fragment-txt-edit-data">Enter the new fragment data: <span class="editId"></span></label>
+            <textarea id="fragment-txt-edit-data" name="fragment-txt-edit-data" cols="30" rows="10"></textarea>
+        </section>
+
+        <button type="submit" id="update-fragment">Update Fragment</button>
+    </section>
+
+    <hr>
+
     <section id="fragment-view-section">
-        <h4>Fragments Table</h4>
+        <h3>Fragments Table</h3>
         <table>
             <thead>
                 <tr>
-                    <th>OWNER ID</th>
-                    <th>ID</th>
-                    <th>TYPE</th>
-                    <th>CREATED</th>
-                    <th>UPDATED</th>
-                    <th>SIZE</th>
+                    <th></th>
+                    <th>Owner ID</th>
+                    <th>Fragment ID</th>
+                    <th>Type</th>
+                    <th>Created date</th>
+                    <th>Updated Date</th>
+                    <th>Fragment Size</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
